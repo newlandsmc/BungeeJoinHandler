@@ -10,10 +10,11 @@ import java.util.UUID;
 public class H2StorageProvider implements StorageHandler {
     private Connection connection;
     private boolean enabled = false;
-    private final File dbFile = new File(Main.getInstance().getDataFolder(), "data.db");
+    private File dbFile;
 
     @Override
     public void init(Main plugin) {
+        dbFile = new File(Main.getInstance().getDataFolder(), "data.db");
         try {
             Class.forName("org.h2.Driver");
         } catch (ClassNotFoundException e) {
