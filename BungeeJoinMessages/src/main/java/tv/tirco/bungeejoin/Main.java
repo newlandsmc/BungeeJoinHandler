@@ -55,6 +55,8 @@ public class Main extends Plugin {
             storageHandler = new NoOpStorageProvider();
         }
 
+        getProxy().registerChannel("bungeejoin:title");
+
         // Commands enabled with following method must have entries in plugin.yml
         //getCommand("example").setExecutor(new ExampleCommand(this));
         MessageHandler.getInstance().setupConfigMessages();

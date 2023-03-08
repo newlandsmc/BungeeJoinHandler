@@ -37,6 +37,9 @@ public class ConfigSettings {
     boolean leftViewableByLeft = true;
     boolean leftViewableByOther = true;
 
+    boolean showTitleOnFirstJoin = true;
+    boolean showTitleOnEveryJoin = false;
+
     List<String> serverJoinMessageDisabled;
     List<String> serverLeaveMessageDisabled;
 
@@ -95,6 +98,10 @@ public class ConfigSettings {
         this.serverJoinMessageDisabled = Main.getInstance().getConfig().getStringList("Settings.IgnoreJoinMessagesList");
         this.serverLeaveMessageDisabled = Main.getInstance().getConfig().getStringList("Settings.IgnoreLeaveMessagesList");
 
+
+        this.showTitleOnFirstJoin = Main.getInstance().getConfig().getBoolean("Settings.Title.sendOnFirstJoin", true);
+        this.showTitleOnEveryJoin = Main.getInstance().getConfig().getBoolean("Settings.Title.sendOnEveryJoin", false);
+
         //Verify Swap Server Message
         switch (swapServerMessageRequires) {
             case "JOINED":
@@ -127,6 +134,14 @@ public class ConfigSettings {
 
     public boolean notifyAdminsOnSilentMove() {
         return notifyAdminsOnSilentMove;
+    }
+
+    public boolean isShowTitleOnEveryJoin() {
+        return showTitleOnEveryJoin;
+    }
+
+    public boolean isShowTitleOnFirstJoin() {
+        return showTitleOnFirstJoin;
     }
 
     public boolean getAdminMessageState(ProxiedPlayer p) {
