@@ -1,4 +1,4 @@
-package tv.tirco.bungeejoin.Listener;
+package tv.tirco.bungeejoin.listeners;
 
 import java.util.concurrent.TimeUnit;
 
@@ -14,8 +14,8 @@ import net.md_5.bungee.api.event.ServerConnectEvent.Reason;
 import net.md_5.bungee.api.event.ServerConnectedEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
-import tv.tirco.bungeejoin.BungeeJoinMessages.Main;
-import tv.tirco.bungeejoin.BungeeJoinMessages.Storage;
+import tv.tirco.bungeejoin.Main;
+import tv.tirco.bungeejoin.ConfigSettings;
 import tv.tirco.bungeejoin.util.HexChat;
 import tv.tirco.bungeejoin.util.MessageHandler;
 
@@ -39,7 +39,7 @@ public class PlayerListener implements Listener{
 				//Normal connection reason. All is okay,
 			} else {
 				//Remove player from OldServer list, so that their movement is not notified.
-				Storage.getInstance().clearPlayer(player);
+				ConfigSettings.getInstance().clearPlayer(player);
 			}
 		}
 		
@@ -47,7 +47,7 @@ public class PlayerListener implements Listener{
 		if(server != null ) {
 			String serverName = server.getInfo().getName();
 			if(serverName != null) {
-				Storage.getInstance().setFrom(player, server.getInfo().getName());
+				ConfigSettings.getInstance().setFrom(player, server.getInfo().getName());
 			}
 		}
 	}
@@ -57,30 +57,30 @@ public class PlayerListener implements Listener{
 		ProxiedPlayer player = e.getPlayer();
 		Server server = e.getServer();
 		
-		if(!Storage.getInstance().isConnected(player)) {
+		if(!ConfigSettings.getInstance().isConnected(player)) {
 			return;
 		}
 
 		String to = server.getInfo().getName();
 		String from = "???";
-		if(Storage.getInstance().isElsewhere(player)) {
-			from = Storage.getInstance().getFrom(player);
+		if(ConfigSettings.getInstance().isElsewhere(player)) {
+			from = ConfigSettings.getInstance().getFrom(player);
 		} else {
 			return; //Event was not a To-From event, so we send no message.
 		}
 		
-		if(Storage.getInstance().isSwapServerMessageEnabled()) {
+		if(ConfigSettings.getInstance().isSwapServerMessageEnabled()) {
 			
-	    	if(Storage.getInstance().blacklistCheck(from, to)) {
+	    	if(ConfigSettings.getInstance().blacklistCheck(from, to)) {
 	    		return;
 	    	}
 			
     		String message = MessageHandler.getInstance().formatSwitchMessage(player, from, to);
 			
     		//Silent
-	    	if(Storage.getInstance().getAdminMessageState(player)) {
+	    	if(ConfigSettings.getInstance().getAdminMessageState(player)) {
 	    		Main.getInstance().SilentEvent("MOVE", player.getName(), from, to);
-	    		if(Storage.getInstance().notifyAdminsOnSilentMove()) {
+	    		if(ConfigSettings.getInstance().notifyAdminsOnSilentMove()) {
 	    			TextComponent silentMessage = new TextComponent(HexChat.translateHexCodes(silent + message));
 	    			for(ProxiedPlayer p : Main.getInstance().getProxy().getPlayers()) {
 	    				if(p.hasPermission("bungeejoinmessages.silent")) {
@@ -110,8 +110,8 @@ public class PlayerListener implements Listener{
 		 public void run()
 		 {
 			 if(player.isConnected()) {
-				 	Storage.getInstance().setConnected(player, true);
-				    if(!Storage.getInstance().isJoinNetworkMessageEnabled()) {
+				 	ConfigSettings.getInstance().setConnected(player, true);
+				    if(!ConfigSettings.getInstance().isJoinNetworkMessageEnabled()) {
 				    	return;
 				    }
 		    		String message = MessageHandler.getInstance().formatJoinMessage(player);
@@ -119,16 +119,16 @@ public class PlayerListener implements Listener{
 		    		//VanishAPI support
 		    		if(Main.getInstance().VanishAPI) {
 		    			if(Main.getInstance().getConfig().getBoolean("OtherPlugins.PremiumVanish.ToggleFakemessageWhenVanishing",false))
-		    			Storage.getInstance().setAdminMessageState(player,BungeeVanishAPI.isInvisible(player));
+		    			ConfigSettings.getInstance().setAdminMessageState(player,BungeeVanishAPI.isInvisible(player));
 		    		}
 		    		
 		    		//Blacklist Check
-		        	if(Storage.getInstance().blacklistCheck(player)) {
+		        	if(ConfigSettings.getInstance().blacklistCheck(player)) {
 		        		return;
 		        	}
 		    		
 		    		//Silent
-			    	if(Storage.getInstance().getAdminMessageState(player)) {
+			    	if(ConfigSettings.getInstance().getAdminMessageState(player)) {
 			    		//Notify player about the toggle command.
 			    		if(player.hasPermission("bungeejoinmessages.fakemessage")) {
 				    		String toggleNotif = Main.getInstance().getConfig().getString("Messages.Commands.Fakemessage.JoinNotification",     					
@@ -143,7 +143,7 @@ public class PlayerListener implements Listener{
 			    		//Send to console
 			    		Main.getInstance().SilentEvent("JOIN", player.getName());
 			    		//Send to admin players.
-			    		if(Storage.getInstance().notifyAdminsOnSilentMove()) {
+			    		if(ConfigSettings.getInstance().notifyAdminsOnSilentMove()) {
 			    			TextComponent silentMessage = new TextComponent(HexChat.translateHexCodes( silent + message));
 			    			for(ProxiedPlayer p : Main.getInstance().getProxy().getPlayers()) {
 			    				if(p.hasPermission("bungeejoinmessages.silent")) {
@@ -176,27 +176,27 @@ public class PlayerListener implements Listener{
     	}
 
     	
-    	if(!Storage.getInstance().isConnected(player)) {
+    	if(!ConfigSettings.getInstance().isConnected(player)) {
     		return;
     	}
     	 	
-    	if(!Storage.getInstance().isJoinNetworkMessageEnabled()) {
-    			Storage.getInstance().setConnected(player, false);
+    	if(!ConfigSettings.getInstance().isJoinNetworkMessageEnabled()) {
+    			ConfigSettings.getInstance().setConnected(player, false);
     	    	return;
     	}
     	
-    	if(Storage.getInstance().blacklistCheck(player)) {
+    	if(ConfigSettings.getInstance().blacklistCheck(player)) {
     		return;
     	}
     	
     	String message = MessageHandler.getInstance().formatQuitMessage(player);
 		
 		//Silent
-    	if(Storage.getInstance().getAdminMessageState(player)) {
+    	if(ConfigSettings.getInstance().getAdminMessageState(player)) {
     		//Send to console
     		Main.getInstance().SilentEvent("QUIT", player.getName());
     		//Send to admin players.
-    		if(Storage.getInstance().notifyAdminsOnSilentMove()) {
+    		if(ConfigSettings.getInstance().notifyAdminsOnSilentMove()) {
     			TextComponent silentMessage = new TextComponent(HexChat.translateHexCodes(silent + message));
     			for(ProxiedPlayer p : Main.getInstance().getProxy().getPlayers()) {
     				if(p.hasPermission("bungeejoinmessages.silent")) {
@@ -211,6 +211,6 @@ public class PlayerListener implements Listener{
     	}
     	
     	//Set them as not connected, as they have left the server.
-    	Storage.getInstance().setConnected(player, false);
+    	ConfigSettings.getInstance().setConnected(player, false);
     }
 }

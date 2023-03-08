@@ -13,8 +13,8 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
-import tv.tirco.bungeejoin.BungeeJoinMessages.Main;
-import tv.tirco.bungeejoin.BungeeJoinMessages.Storage;
+import tv.tirco.bungeejoin.Main;
+import tv.tirco.bungeejoin.ConfigSettings;
 
 public class MessageHandler {
 
@@ -87,21 +87,21 @@ public class MessageHandler {
 		
 		List<ProxiedPlayer> receivers = new ArrayList<ProxiedPlayer>();
 		if(type.equalsIgnoreCase("switch")) {
-			receivers.addAll(Storage.getInstance().getSwitchMessageReceivers(to,from));
+			receivers.addAll(ConfigSettings.getInstance().getSwitchMessageReceivers(to,from));
 		} else if(type.equalsIgnoreCase("join")){
-			receivers.addAll(Storage.getInstance().getJoinMessageReceivers(from));
+			receivers.addAll(ConfigSettings.getInstance().getJoinMessageReceivers(from));
 		} else if(type.equalsIgnoreCase("leave")){
-			receivers.addAll(Storage.getInstance().getLeaveMessageReceivers(from));
+			receivers.addAll(ConfigSettings.getInstance().getLeaveMessageReceivers(from));
 		}else {
 			receivers.addAll(ProxyServer.getInstance().getPlayers());
 		}
 		
 		//Remove the players that have messages disabled
-		List<UUID> ignorePlayers = Storage.getInstance().getIgnorePlayers(type);
+		List<UUID> ignorePlayers = ConfigSettings.getInstance().getIgnorePlayers(type);
 		Main.getInstance().getLogger().info(text);
 		
 		//Add the players that are on ignored servers to the ignored list.
-		ignorePlayers.addAll(Storage.getInstance().getIgnoredServerPlayers(type));
+		ignorePlayers.addAll(ConfigSettings.getInstance().getIgnoredServerPlayers(type));
 
 		//Parse through all receivers and ignore the ones that are on the ignore list.
 		for(ProxiedPlayer player : receivers) {

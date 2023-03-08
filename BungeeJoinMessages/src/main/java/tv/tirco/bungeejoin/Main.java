@@ -1,4 +1,4 @@
-package tv.tirco.bungeejoin.BungeeJoinMessages;
+package tv.tirco.bungeejoin;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,8 +10,8 @@ import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
-import tv.tirco.bungeejoin.Listener.PlayerListener;
-import tv.tirco.bungeejoin.Listener.VanishListener;
+import tv.tirco.bungeejoin.listeners.PlayerListener;
+import tv.tirco.bungeejoin.listeners.VanishListener;
 import tv.tirco.bungeejoin.commands.FakeCommand;
 import tv.tirco.bungeejoin.commands.ReloadCommand;
 import tv.tirco.bungeejoin.commands.ToggleJoinCommand;
@@ -38,7 +38,7 @@ public class Main extends Plugin {
         // Commands enabled with following method must have entries in plugin.yml
         //getCommand("example").setExecutor(new ExampleCommand(this));
 		MessageHandler.getInstance().setupConfigMessages();
-		Storage.getInstance().setUpDefaultValuesFromConfig();
+		ConfigSettings.getInstance().setUpDefaultValuesFromConfig();
 		getProxy().getPluginManager().registerListener(this, new PlayerListener());
 		
 		ProxyServer.getInstance().getPluginManager().registerCommand(this, new FakeCommand());
@@ -101,7 +101,7 @@ public class Main extends Plugin {
 	public void reloadConfig() {
 		loadConfig();
 		MessageHandler.getInstance().setupConfigMessages();
-		Storage.getInstance().setUpDefaultValuesFromConfig();
+		ConfigSettings.getInstance().setUpDefaultValuesFromConfig();
 	}
 	
 	/**

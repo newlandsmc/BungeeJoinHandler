@@ -3,7 +3,7 @@ package tv.tirco.bungeejoin.commands;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
-import tv.tirco.bungeejoin.BungeeJoinMessages.Main;
+import tv.tirco.bungeejoin.Main;
 import tv.tirco.bungeejoin.util.HexChat;
 
 public class ReloadCommand extends Command {

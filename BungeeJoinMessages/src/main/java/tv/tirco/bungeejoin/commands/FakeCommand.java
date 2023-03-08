@@ -10,8 +10,8 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
-import tv.tirco.bungeejoin.BungeeJoinMessages.Main;
-import tv.tirco.bungeejoin.BungeeJoinMessages.Storage;
+import tv.tirco.bungeejoin.Main;
+import tv.tirco.bungeejoin.ConfigSettings;
 import tv.tirco.bungeejoin.util.HexChat;
 import tv.tirco.bungeejoin.util.MessageHandler;
 
@@ -78,13 +78,13 @@ public class FakeCommand extends Command implements TabExecutor{
                     	player.sendMessage(message);
                     	return;
             		} else {
-            			Boolean state = !Storage.getInstance().getAdminMessageState(player);
+            			Boolean state = !ConfigSettings.getInstance().getAdminMessageState(player);
             			msg = Main.getInstance().getConfig().getString("Messages.Commands.Fakemessage.ToggleSilent", 
             					"&eYour SilentMode has now been set to &6<state>");
             			msg = msg.replace("<state>", state+"");
             			TextComponent message = new TextComponent(HexChat.translateHexCodes( msg));
                     	player.sendMessage(message);
-            			Storage.getInstance().setAdminMessageState(player,state);
+            			ConfigSettings.getInstance().setAdminMessageState(player,state);
             			return;
             		}
             	}

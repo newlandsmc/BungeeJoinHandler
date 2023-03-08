@@ -1,12 +1,12 @@
-package tv.tirco.bungeejoin.Listener;
+package tv.tirco.bungeejoin.listeners;
 
 import de.myzelyam.api.vanish.BungeePlayerHideEvent;
 import de.myzelyam.api.vanish.BungeePlayerShowEvent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
-import tv.tirco.bungeejoin.BungeeJoinMessages.Main;
-import tv.tirco.bungeejoin.BungeeJoinMessages.Storage;
+import tv.tirco.bungeejoin.Main;
+import tv.tirco.bungeejoin.ConfigSettings;
 
 public class VanishListener implements Listener{
 
@@ -16,7 +16,7 @@ public class VanishListener implements Listener{
 		//Main.getInstance().getLogger().info("playerHideEvent triggered");
 		if(Main.getInstance().getConfig().getBoolean("OtherPlugins.PremiumVanish.ToggleFakemessageWhenVanishing",true)){
 			if(player.hasPermission("bungeejoinmessages.silent")) {
-				Storage.getInstance().setAdminMessageState(player, true);
+				ConfigSettings.getInstance().setAdminMessageState(player, true);
 				Main.getInstance().getLogger().info("PremiumVanish has toggled the MessageState of " + player.getDisplayName() + " to true");
 			}
 		}
@@ -28,7 +28,7 @@ public class VanishListener implements Listener{
 		Main.getInstance().getLogger().info("playerShowEvent triggered");
 		if(Main.getInstance().getConfig().getBoolean("OtherPlugins.PremiumVanish.ToggleFakemessageWhenVanishing",true)){
 			if(player.hasPermission("bungeejoinmessages.silent")) {
-				Storage.getInstance().setAdminMessageState(player, false);
+				ConfigSettings.getInstance().setAdminMessageState(player, false);
 				Main.getInstance().getLogger().info("PremiumVanish has toggled the MessageState of " + player.getDisplayName() + " to false");
 			}
 		}

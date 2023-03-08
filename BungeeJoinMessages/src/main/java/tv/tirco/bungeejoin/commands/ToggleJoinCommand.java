@@ -9,8 +9,8 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
-import tv.tirco.bungeejoin.BungeeJoinMessages.Main;
-import tv.tirco.bungeejoin.BungeeJoinMessages.Storage;
+import tv.tirco.bungeejoin.Main;
+import tv.tirco.bungeejoin.ConfigSettings;
 import tv.tirco.bungeejoin.util.HexChat;
 
 public class ToggleJoinCommand extends Command implements TabExecutor{
@@ -50,7 +50,7 @@ public class ToggleJoinCommand extends Command implements TabExecutor{
             		state = true;
             	}
             	if(commandArguments.contains(args[0].toLowerCase())) {
-            		Storage.getInstance().setSendMessageState(args[0], player.getUniqueId(), state);
+            		ConfigSettings.getInstance().setSendMessageState(args[0], player.getUniqueId(), state);
         			String msg = Main.getInstance().getConfig().getString("Messages.Commands.ToggleJoin.Confirmation", 
                 			"&6Receive messages for &f<mode>&6 has been set to &f<state>\n&6This will last until the network reboots.");
                     msg = msg.replace("<mode>", args[0]);

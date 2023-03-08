@@ -39,7 +39,7 @@
     <properties>
         <!--  Author and MainClass are used in plugin.yml -->
         <author>Tirco</author>
-        <mainClass>tv.tirco.bungeejoin.BungeeJoinMessages.Main</mainClass>
+        <mainClass>tv.tirco.bungeejoin.Main</mainClass>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 

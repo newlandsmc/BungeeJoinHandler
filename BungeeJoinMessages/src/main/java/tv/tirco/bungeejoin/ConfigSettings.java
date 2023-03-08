@@ -1,4 +1,4 @@
-package tv.tirco.bungeejoin.BungeeJoinMessages;
+package tv.tirco.bungeejoin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,9 +10,9 @@ import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import tv.tirco.bungeejoin.util.MessageHandler;
 
-public class Storage {
+public class ConfigSettings {
 
-	private static Storage instance;
+	private static ConfigSettings instance;
 	
 	HashMap<ProxiedPlayer,String> previousServer;
 	HashMap<UUID,Boolean> messageState;
@@ -21,42 +21,42 @@ public class Storage {
 	List<UUID> noLeaveMessage;
 	List<UUID> noSwitchMessage;
 	
-	boolean SwapServerMessageEnabled = true;
-	boolean JoinNetworkMessageEnabled = true;
-	boolean LeaveNetworkMessageEnabled = true;
-	boolean NotifyAdminsOnSilentMove = true;
+	boolean swapServerMessageEnabled = true;
+	boolean joinNetworkMessageEnabled = true;
+	boolean leaveNetworkMessageEnabled = true;
+	boolean notifyAdminsOnSilentMove = true;
 	
-	boolean SwapViewableByJoined = true;
-	boolean SwapViewableByLeft = true;
-	boolean SwapViewableByOther = true;
+	boolean swapViewableByJoined = true;
+	boolean swapViewableByLeft = true;
+	boolean swapViewableByOther = true;
 	
-	boolean JoinViewableByJoined = true;
-	boolean JoinViewableByOther = true;
+	boolean joinViewableByJoined = true;
+	boolean joinViewableByOther = true;
 	
-	boolean LeftViewableByLeft = true;
-	boolean LeftViewableByOther = true;
+	boolean leftViewableByLeft = true;
+	boolean leftViewableByOther = true;
 	
-	List<String> ServerJoinMessageDisabled;
-	List<String> ServerLeaveMessageDisabled;
+	List<String> serverJoinMessageDisabled;
+	List<String> serverLeaveMessageDisabled;
 	
 	//BlackList settings
-	List<String> BlacklistedServers;
+	List<String> blacklistedServers;
 	boolean useBlacklistAsWhitelist;
-	String SwapServerMessageRequires = "ANY";
+	String swapServerMessageRequires = "ANY";
 	
 	/**
 	 * Get current instance. Make new if there is none.
 	 * @return instance of the storage.
 	 */
-	public static Storage getInstance() {
+	public static ConfigSettings getInstance() {
 		if (instance == null) {
-			instance = new Storage();
+			instance = new ConfigSettings();
 		}
 
 		return instance;
 	}
 	
-	public Storage() {
+	public ConfigSettings() {
 		this.previousServer = new HashMap<ProxiedPlayer,String>();
 		this.messageState = new HashMap<UUID,Boolean>();
 		this.onlinePlayers = new ArrayList<UUID>();
@@ -69,34 +69,34 @@ public class Storage {
 	 * Grab values from config and save them here.
 	 */
 	public void setUpDefaultValuesFromConfig() {
-		this.SwapServerMessageEnabled = Main.getInstance().getConfig().getBoolean("Settings.SwapServerMessageEnabled", true);
-		this.JoinNetworkMessageEnabled = Main.getInstance().getConfig().getBoolean("Settings.JoinNetworkMessageEnabled", true);
-		this.LeaveNetworkMessageEnabled = Main.getInstance().getConfig().getBoolean("Settings.LeaveNetworkMessageEnabled", true);
-		this.NotifyAdminsOnSilentMove = Main.getInstance().getConfig().getBoolean("Settings.NotifyAdminsOnSilentMove", true);
+		this.swapServerMessageEnabled = Main.getInstance().getConfig().getBoolean("Settings.SwapServerMessageEnabled", true);
+		this.joinNetworkMessageEnabled = Main.getInstance().getConfig().getBoolean("Settings.JoinNetworkMessageEnabled", true);
+		this.leaveNetworkMessageEnabled = Main.getInstance().getConfig().getBoolean("Settings.LeaveNetworkMessageEnabled", true);
+		this.notifyAdminsOnSilentMove = Main.getInstance().getConfig().getBoolean("Settings.NotifyAdminsOnSilentMove", true);
 	
-		this.SwapViewableByJoined = Main.getInstance().getConfig().getBoolean("Settings.SwapServerMessageViewableBy.ServerJoined", true);
-		this.SwapViewableByLeft = Main.getInstance().getConfig().getBoolean("Settings.SwapServerMessageViewableBy.ServerLeft", true);
-		this.SwapViewableByOther = Main.getInstance().getConfig().getBoolean("Settings.SwapServerMessageViewableBy.OtherServer", true);
+		this.swapViewableByJoined = Main.getInstance().getConfig().getBoolean("Settings.SwapServerMessageViewableBy.ServerJoined", true);
+		this.swapViewableByLeft = Main.getInstance().getConfig().getBoolean("Settings.SwapServerMessageViewableBy.ServerLeft", true);
+		this.swapViewableByOther = Main.getInstance().getConfig().getBoolean("Settings.SwapServerMessageViewableBy.OtherServer", true);
 		
-		this.JoinViewableByJoined = Main.getInstance().getConfig().getBoolean("Settings.JoinNetworkMessageViewableBy.ServerJoined", true);
-		this.JoinViewableByOther = Main.getInstance().getConfig().getBoolean("Settings.JoinNetworkMessageViewableBy.OtherServer", true);
+		this.joinViewableByJoined = Main.getInstance().getConfig().getBoolean("Settings.JoinNetworkMessageViewableBy.ServerJoined", true);
+		this.joinViewableByOther = Main.getInstance().getConfig().getBoolean("Settings.JoinNetworkMessageViewableBy.OtherServer", true);
 		
-		this.LeftViewableByLeft = Main.getInstance().getConfig().getBoolean("Settings.LeaveNetworkMessageViewableBy.ServerLeft", true);
-		this.LeftViewableByOther = Main.getInstance().getConfig().getBoolean("Settings.LeaveNetworkMessageViewableBy.OtherServer", true);
+		this.leftViewableByLeft = Main.getInstance().getConfig().getBoolean("Settings.LeaveNetworkMessageViewableBy.ServerLeft", true);
+		this.leftViewableByOther = Main.getInstance().getConfig().getBoolean("Settings.LeaveNetworkMessageViewableBy.OtherServer", true);
 		
 		//Blacklist
-		this.BlacklistedServers = Main.getInstance().getConfig().getStringList("Settings.ServerBlacklist");
-		if(this.BlacklistedServers == null) { //Not sure if needed. Better safe than sorry.
-			this.BlacklistedServers = new ArrayList<String>();
+		this.blacklistedServers = Main.getInstance().getConfig().getStringList("Settings.ServerBlacklist");
+		if(this.blacklistedServers == null) { //Not sure if needed. Better safe than sorry.
+			this.blacklistedServers = new ArrayList<String>();
 		}
 		this.useBlacklistAsWhitelist = Main.getInstance().getConfig().getBoolean("Settings.UseBlacklistAsWhitelist", false);
-		this.SwapServerMessageRequires = Main.getInstance().getConfig().getString("Settings.SwapServerMessageRequires", "ANY").toUpperCase();
+		this.swapServerMessageRequires = Main.getInstance().getConfig().getString("Settings.SwapServerMessageRequires", "ANY").toUpperCase();
 		
-		this.ServerJoinMessageDisabled = Main.getInstance().getConfig().getStringList("Settings.IgnoreJoinMessagesList");
-		this.ServerLeaveMessageDisabled = Main.getInstance().getConfig().getStringList("Settings.IgnoreLeaveMessagesList");
+		this.serverJoinMessageDisabled = Main.getInstance().getConfig().getStringList("Settings.IgnoreJoinMessagesList");
+		this.serverLeaveMessageDisabled = Main.getInstance().getConfig().getStringList("Settings.IgnoreLeaveMessagesList");
 		
 		//Verify Swap Server Message
-		switch(SwapServerMessageRequires) {
+		switch(swapServerMessageRequires) {
 		case "JOINED":
 		case "LEFT":
 		case "BOTH":
@@ -104,9 +104,9 @@ public class Storage {
 			break;
 		default:
 			MessageHandler.getInstance().log("Setting error: Settings.SwapServerMessageRequires "
-					+ "only allows JOINED LEFT BOTH or ANY. Got " + SwapServerMessageRequires +
+					+ "only allows JOINED LEFT BOTH or ANY. Got " + swapServerMessageRequires +
 					"Defaulting to ANY.");
-			this.SwapServerMessageRequires = "ANY";
+			this.swapServerMessageRequires = "ANY";
 		}
 		
 		MessageHandler.getInstance().log("BungeeJoinMessages Config has been reloaded.");
@@ -114,16 +114,16 @@ public class Storage {
 	}
 	
 	public boolean isSwapServerMessageEnabled() {
-		return SwapServerMessageEnabled;
+		return swapServerMessageEnabled;
 	}
 	public boolean isJoinNetworkMessageEnabled() {
-		return JoinNetworkMessageEnabled;
+		return joinNetworkMessageEnabled;
 	}
 	public boolean isLeaveNetworkMessageEnabled() {
-		return LeaveNetworkMessageEnabled;
+		return leaveNetworkMessageEnabled;
 	}
 	public boolean notifyAdminsOnSilentMove() {
-		return NotifyAdminsOnSilentMove;
+		return notifyAdminsOnSilentMove;
 	}
 	
 	public boolean getAdminMessageState(ProxiedPlayer p) {
@@ -248,20 +248,20 @@ public class Storage {
 	public List<ProxiedPlayer> getSwitchMessageReceivers(String to, String from) {
 		List<ProxiedPlayer> receivers = new ArrayList<ProxiedPlayer>();
 		//If all are true, add all players:
-		if(SwapViewableByJoined && SwapViewableByLeft && SwapViewableByOther) {
+		if(swapViewableByJoined && swapViewableByLeft && swapViewableByOther) {
 			receivers.addAll(ProxyServer.getInstance().getPlayers());
 			return receivers;
 		} 
 
 		//Other server is true, but atleast one of the to or from are set to false:
-		else if(SwapViewableByOther){
+		else if(swapViewableByOther){
 			receivers.addAll(ProxyServer.getInstance().getPlayers());
 			//Players on the connected server is not allowed to see. Remove them all.
-			if(!SwapViewableByJoined) {
+			if(!swapViewableByJoined) {
 				receivers.removeAll(getServerPlayers(to));
 			}
 			
-			if(!SwapViewableByLeft) {
+			if(!swapViewableByLeft) {
 				receivers.removeAll(getServerPlayers(from));
 			}
 			return receivers;
@@ -269,11 +269,11 @@ public class Storage {
 		
 		//OtherServer is false.
 		else {
-			if(SwapViewableByJoined) {
+			if(swapViewableByJoined) {
 				receivers.addAll(getServerPlayers(to));
 			}
 			
-			if(SwapViewableByLeft) {
+			if(swapViewableByLeft) {
 				receivers.addAll(getServerPlayers(from));
 			}
 			return receivers;
@@ -283,19 +283,19 @@ public class Storage {
 	public List<ProxiedPlayer> getJoinMessageReceivers(String server) {
 		List<ProxiedPlayer> receivers = new ArrayList<ProxiedPlayer>();
 		//If all are true, add all players:
-		if(JoinViewableByJoined && JoinViewableByOther) {
+		if(joinViewableByJoined && joinViewableByOther) {
 			receivers.addAll(ProxyServer.getInstance().getPlayers());
 			return receivers;
 		} 
 
 		//Other server is true, but atleast one of the to or from are set to false:
-		else if(JoinViewableByOther){
+		else if(joinViewableByOther){
 			receivers.addAll(ProxyServer.getInstance().getPlayers());
 			receivers.removeAll(getServerPlayers(server));
 			return receivers;
 		} 
 		else {
-			if(JoinViewableByJoined) {
+			if(joinViewableByJoined) {
 				receivers.addAll(getServerPlayers(server));
 			}
 			return receivers;
@@ -305,19 +305,19 @@ public class Storage {
 	public List<ProxiedPlayer> getLeaveMessageReceivers(String server) {
 		List<ProxiedPlayer> receivers = new ArrayList<ProxiedPlayer>();
 		//If all are true, add all players:
-		if(LeftViewableByLeft && LeftViewableByOther) {
+		if(leftViewableByLeft && leftViewableByOther) {
 			receivers.addAll(ProxyServer.getInstance().getPlayers());
 			return receivers;
 		} 
 
 		//Other server is true, but atleast one of the to or from are set to false:
-		else if(LeftViewableByOther){
+		else if(leftViewableByOther){
 			receivers.addAll(ProxyServer.getInstance().getPlayers());
 			receivers.removeAll(getServerPlayers(server));
 			return receivers;
 		} 
 		else {
-			if(LeftViewableByLeft) {
+			if(leftViewableByLeft) {
 				receivers.addAll(getServerPlayers(server));
 			}
 			return receivers;
@@ -347,11 +347,11 @@ public class Storage {
 			return false;
 		}
 		
-		if(BlacklistedServers == null) {
+		if(blacklistedServers == null) {
 			MessageHandler.getInstance().log("Warning: Blacklisted servers returned null instead of an empty list...");
 			return false;
 		}
-		boolean listed = BlacklistedServers.contains(server);
+		boolean listed = blacklistedServers.contains(server);
 		if(useBlacklistAsWhitelist) {
 		//WHITELIST
 			return !listed;
@@ -369,18 +369,18 @@ public class Storage {
 	}
 
 	public boolean blacklistCheck(String from, String to) {
-		Boolean fromListed = false;
+		boolean fromListed = false;
 			if(from != null) {
-				fromListed = BlacklistedServers.contains(from);
+				fromListed = blacklistedServers.contains(from);
 			}
 		
-		Boolean toListed = false;
+		boolean toListed = false;
 			if(to != null) {
-				toListed = BlacklistedServers.contains(to);
+				toListed = blacklistedServers.contains(to);
 			}
 		
-		Boolean result = true;
-		switch(SwapServerMessageRequires.toUpperCase()) {
+		boolean result = true;
+		switch(swapServerMessageRequires.toUpperCase()) {
 		case "JOINED":
 			result = toListed;
 			//MessageHandler.getInstance().log("Joined - toListed = " + toListed);
@@ -415,7 +415,7 @@ public class Storage {
 	public List<UUID> getIgnoredServerPlayers(String type) {
 		List<UUID> ignored = new ArrayList<UUID>();
 		if(type.equalsIgnoreCase("join")) {
-			for(String s : ServerJoinMessageDisabled) {
+			for(String s : serverJoinMessageDisabled) {
 				ServerInfo info = Main.getInstance().getProxy().getServers().get(s);
 				if(info != null) {
 					for(ProxiedPlayer p :info.getPlayers()) {
@@ -424,7 +424,7 @@ public class Storage {
 				}
 			}
 		} else if(type.equalsIgnoreCase("leave")) {
-			for(String s : ServerLeaveMessageDisabled) {
+			for(String s : serverLeaveMessageDisabled) {
 				ServerInfo info = Main.getInstance().getProxy().getServers().get(s);
 				if(info != null) {
 					for(ProxiedPlayer p :info.getPlayers()) {
