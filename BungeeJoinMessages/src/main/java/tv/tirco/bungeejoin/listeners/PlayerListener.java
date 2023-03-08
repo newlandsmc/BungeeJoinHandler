@@ -103,38 +103,39 @@ public class PlayerListener implements Listener {
         if (player == null) {
             return;
         }
+        /*
         ProxyServer.getInstance().getScheduler().schedule(Main.getInstance().getPlugin(), () -> {
             if (player.isConnected()) {
-                ConfigSettings.getInstance().setConnected(player, true);
-                boolean firstJoin = false;
-                if (Main.getInstance().getStorageHandler() != null) {
-                    if (!Main.getInstance().getStorageHandler().doesPlayerExist(player.getUniqueId())) {
-                        Main.getInstance().getStorageHandler().createPlayer(player.getUniqueId(), player.getName());
-                        ProxyServer.getInstance().getPluginManager().callEvent(new FirstJoinNetworkEvent(player));
-                        firstJoin = true;
-                    } else {
-                        Main.getInstance().getStorageHandler().setLastJoin(player.getUniqueId(), System.currentTimeMillis());
-                    }
-                }
-                if (!firstJoin && ConfigSettings.getInstance().isShowTitleOnEveryJoin()) {
-                    String channel = "bungeejoin:title";
-                    ByteArrayDataOutput out = ByteStreams.newDataOutput();
-                    out.writeUTF("Title");
-                    out.writeUTF(player.getUniqueId() + "");
-                    out.writeBoolean(false); // firstJoin
-                    event.getPlayer().getServer().sendData(channel, out.toByteArray());
-                }
-                if (!ConfigSettings.getInstance().isJoinNetworkMessageEnabled()) {
-                    return;
-                }
-                String message = MessageHandler.getInstance().formatJoinMessage(player);
-                if (!processSilent(player, message)) {
-                    MessageHandler.getInstance().broadcastMessage(HexChat.translateHexCodes(message), "join", player);
-                }
+
             }
-
-
         }, 3, TimeUnit.SECONDS);
+         */
+        ConfigSettings.getInstance().setConnected(player, true);
+        boolean firstJoin = false;
+        if (Main.getInstance().getStorageHandler() != null) {
+            if (!Main.getInstance().getStorageHandler().doesPlayerExist(player.getUniqueId())) {
+                Main.getInstance().getStorageHandler().createPlayer(player.getUniqueId(), player.getName());
+                ProxyServer.getInstance().getPluginManager().callEvent(new FirstJoinNetworkEvent(player));
+                firstJoin = true;
+            } else {
+                Main.getInstance().getStorageHandler().setLastJoin(player.getUniqueId(), System.currentTimeMillis());
+            }
+        }
+        if (!firstJoin && ConfigSettings.getInstance().isShowTitleOnEveryJoin()) {
+            String channel = "bungeejoin:title";
+            ByteArrayDataOutput out = ByteStreams.newDataOutput();
+            out.writeUTF("Title");
+            out.writeUTF(player.getUniqueId() + "");
+            out.writeBoolean(false); // firstJoin
+            event.getPlayer().getServer().sendData(channel, out.toByteArray());
+        }
+        if (!ConfigSettings.getInstance().isJoinNetworkMessageEnabled()) {
+            return;
+        }
+        String message = MessageHandler.getInstance().formatJoinMessage(player);
+        if (!processSilent(player, message)) {
+            MessageHandler.getInstance().broadcastMessage(HexChat.translateHexCodes(message), "join", player);
+        }
     }
     public static boolean processSilent(ProxiedPlayer player, String message) {
         //VanishAPI support
