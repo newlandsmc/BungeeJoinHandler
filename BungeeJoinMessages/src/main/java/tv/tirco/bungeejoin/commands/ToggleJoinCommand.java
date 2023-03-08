@@ -55,13 +55,13 @@ public class ToggleJoinCommand extends Command implements TabExecutor {
                     msg = msg.replace("<mode>", args[0]);
                     msg = msg.replace("<state>", state + "");
                     player.sendMessage(new TextComponent(HexChat.translateHexCodes(msg)));
-				} else {
+                } else {
                     //Triggered if commandArguments does not contain the argument used.
                     String msg = Main.getInstance().getConfig().getString("Messages.Commands.ToggleJoin.MissingFirstArgument",
                             "&6Please specify which messages you would like to disable/enable.\n"
                                     + "&6Valid arguments are:&f join, leave, switch, all");
                     player.sendMessage(new TextComponent(HexChat.translateHexCodes(msg)));
-				}
+                }
             }
         }
     }

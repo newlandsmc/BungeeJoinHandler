@@ -10,6 +10,9 @@ import tv.tirco.bungeejoin.commands.ReloadCommand;
 import tv.tirco.bungeejoin.commands.ToggleJoinCommand;
 import tv.tirco.bungeejoin.listeners.PlayerListener;
 import tv.tirco.bungeejoin.listeners.VanishListener;
+import tv.tirco.bungeejoin.storage.StorageHandler;
+import tv.tirco.bungeejoin.storage.impl.H2StorageProvider;
+import tv.tirco.bungeejoin.storage.impl.NoOpStorageProvider;
 import tv.tirco.bungeejoin.util.HexChat;
 import tv.tirco.bungeejoin.util.MessageHandler;
 
@@ -25,6 +28,7 @@ public class Main extends Plugin {
     //private File file;
     private Configuration configuration;
     private Plugin mainPlugin;
+    private StorageHandler storageHandler = new H2StorageProvider();
 
     public static Main getInstance() {
         return instance;
@@ -38,10 +42,19 @@ public class Main extends Plugin {
     public void onEnable() {
         getLogger().info("Bungee Version is loading...");
         setInstance(this);
+        if (!getDataFolder().exists()) getDataFolder().mkdir();
         this.mainPlugin = this;
         // Don't log enabling, Spigot does that for you automatically!
 
         loadConfig();
+
+        try {
+            storageHandler.init(this);
+        } catch (Exception e) {
+            getLogger().info("Failed to initialize storage handler!");
+            storageHandler = new NoOpStorageProvider();
+        }
+
         // Commands enabled with following method must have entries in plugin.yml
         //getCommand("example").setExecutor(new ExampleCommand(this));
         MessageHandler.getInstance().setupConfigMessages();
@@ -86,7 +99,7 @@ public class Main extends Plugin {
 
     @Override
     public void onDisable() {
-        // Don't log disabling, Spigot does that for you automatically!
+        storageHandler.close(this);
     }
 
     public Plugin getPlugin() {
@@ -108,8 +121,8 @@ public class Main extends Plugin {
      * @param type - Type of event
      * @param name - Name of player.
      */
-    public void SilentEvent(String type, String name) {
-        SilentEvent(type, name, "", "");
+    public void silentEvent(String type, String name) {
+        silentEvent(type, name, "", "");
     }
 
     /**
@@ -120,7 +133,7 @@ public class Main extends Plugin {
      * @param from - Name of the server that is being moved from.
      * @param to   - Name of the server that is being moved to.
      */
-    public void SilentEvent(String type, String name, String from, String to) {
+    public void silentEvent(String type, String name, String from, String to) {
         String message = "";
         switch (type) {
             case "MOVE":
@@ -139,5 +152,9 @@ public class Main extends Plugin {
         }
         message = message.replace("<player>", name);
         getLogger().info(HexChat.translateHexCodes(message));
+    }
+
+    public StorageHandler getStorageHandler() {
+        return storageHandler;
     }
 }

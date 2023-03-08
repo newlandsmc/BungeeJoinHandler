@@ -23,6 +23,7 @@ public class ConfigSettings {
 
     boolean swapServerMessageEnabled = true;
     boolean joinNetworkMessageEnabled = true;
+    boolean firstJoinNetworkMessageEnabled = true;
     boolean leaveNetworkMessageEnabled = true;
     boolean notifyAdminsOnSilentMove = true;
 
@@ -72,6 +73,7 @@ public class ConfigSettings {
     public void setUpDefaultValuesFromConfig() {
         this.swapServerMessageEnabled = Main.getInstance().getConfig().getBoolean("Settings.SwapServerMessageEnabled", true);
         this.joinNetworkMessageEnabled = Main.getInstance().getConfig().getBoolean("Settings.JoinNetworkMessageEnabled", true);
+        this.firstJoinNetworkMessageEnabled = Main.getInstance().getConfig().getBoolean("Settings.FirstJoinNetworkMessageEnabled", true);
         this.leaveNetworkMessageEnabled = Main.getInstance().getConfig().getBoolean("Settings.LeaveNetworkMessageEnabled", true);
         this.notifyAdminsOnSilentMove = Main.getInstance().getConfig().getBoolean("Settings.NotifyAdminsOnSilentMove", true);
 
@@ -87,9 +89,6 @@ public class ConfigSettings {
 
         //Blacklist
         this.blacklistedServers = Main.getInstance().getConfig().getStringList("Settings.ServerBlacklist");
-        if (this.blacklistedServers == null) { //Not sure if needed. Better safe than sorry.
-            this.blacklistedServers = new ArrayList<String>();
-        }
         this.useBlacklistAsWhitelist = Main.getInstance().getConfig().getBoolean("Settings.UseBlacklistAsWhitelist", false);
         this.swapServerMessageRequires = Main.getInstance().getConfig().getString("Settings.SwapServerMessageRequires", "ANY").toUpperCase();
 
@@ -234,7 +233,7 @@ public class ConfigSettings {
                 setSwitchState(id, state);
                 return;
             default:
-		}
+        }
     }
 
     public List<UUID> getIgnorePlayers(String type) {

@@ -6,7 +6,7 @@ Servers:
     staff: "&4Staff Server"
     ???: "&7Unknown Server"
 Messages:
-        ##- '%player% (The playes name)'
+        ##- '%player% (The player's name)'
         ##- '%to% the server they are heading to'
         ##- '%to_clean% the server they are heading to - Without color codes'
         ##- '%from% the server they are coming from'
@@ -16,20 +16,22 @@ Messages:
         ##- '%playercount_network% The amount of players on the network.'
         ##- '%displayname% - The custom name the player has.'
     SwapServerMessage: "&6&l%player%&r &7[%from%&7] (%playercount_from%) -> [%to%&7] (%playercount_to%)"
-        ##- '%player%: (The playes name)'
+        ##- '%player%: (The player's name)'
         ##- '%server_name%: The name of the server they connected to.'
         ##- '%server_name_clean% The name of the server they connected to - Without color codes'
         ##- '%playercount_server%: The playercount of the server they are on.'
         ##- '%playercount_network%: The playercount of the network.'
         ##- '%displayname% - The custom name the player has.'
     JoinNetworkMessage: "&6%displayname% &7(%player%&7) &6has connected to the network!"
-        ##- '%player%: (The playes name)'
+        ##- '%player%: (The player's name)'
         ##- '%server_name%: The name of the server they disconnected from.'
         ##- '%server_name_clean% The name of the server they connected to - Without color codes'
         ##- '%playercount_server%: The playercount of the server they were on.'
         ##- '%playercount_network%: The playercount of the network.'
         ##- '%displayname% - The custom name the player has, according to bungee.'
     LeaveNetworkMessage: "&6%player% &6has disconnected from the network!"
+    # This message will be sent to the player when they join the network for the first time.
+    FirstJoinMessage: "&6%player% &6has joined the network for the first time!"
 ## Configurable Command Messages!
     Commands:
         NoMoreArgumentsNeeded: "No more arguments needed."
@@ -61,6 +63,7 @@ Settings:
     LeaveNetworkMessageEnabled: true
     ##Should other players with the bungeejoinmessages.silent permission be notified of players moving silently?
     NotifyAdminsOnSilentMove: true
+    FirstJoinNetworkMessageEnabled: true
     
     ##NOTE: These does not affect silenced players. Silenced move messages will be seen by all players with the permission.
     SwapServerMessageViewableBy:

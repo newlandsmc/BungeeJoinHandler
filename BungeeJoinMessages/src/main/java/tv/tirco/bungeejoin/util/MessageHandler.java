@@ -15,9 +15,10 @@ import java.util.*;
 public class MessageHandler {
 
     private static MessageHandler instance;
-    String SwapServerMessage = "";
-    String JoinNetworkMessage = "";
-    String LeaveNetworkMessage = "";
+    String swapServerMessage = "";
+    String joinNetworkMessage = "";
+    String leaveNetworkMessage = "";
+    String firstJoinMessage = "";
     HashMap<String, String> serverNames;
 
     public static MessageHandler getInstance() {
@@ -30,10 +31,10 @@ public class MessageHandler {
 
     public void setupConfigMessages() {
         Configuration config = Main.getInstance().getConfig();
-        SwapServerMessage = config.getString("Messages.SwapServerMessage", "&6&l%player%&r  &7[%from%&7] -> [%to%&7]");
-        JoinNetworkMessage = config.getString("Messages.JoinNetworkMessage", "&6%player% &6has connected to the network!");
-        LeaveNetworkMessage = config.getString("Messages.LeaveNetworkMessage", "&6%player% &6has disconnected from the network!");
-
+        swapServerMessage = config.getString("Messages.SwapServerMessage", "&6&l%player%&r  &7[%from%&7] -> [%to%&7]");
+        joinNetworkMessage = config.getString("Messages.JoinNetworkMessage", "&6%player% &6has connected to the network!");
+        leaveNetworkMessage = config.getString("Messages.LeaveNetworkMessage", "&6%player% &6has disconnected from the network!");
+        firstJoinMessage = config.getString("Messages.FirstJoinMessage", "&6%player% &6has joined the network for the first time!");
         HashMap<String, String> serverNames = new HashMap<String, String>();
 
         for (String server : config.getSection("Servers").getKeys()) {
@@ -43,8 +44,6 @@ public class MessageHandler {
         }
 
         this.serverNames = serverNames;
-
-
     }
 
     public String getServerName(String key) {
@@ -111,15 +110,19 @@ public class MessageHandler {
     }
 
     public String getJoinNetworkMessage() {
-        return JoinNetworkMessage;
+        return joinNetworkMessage;
     }
 
     public String getLeaveNetworkMessage() {
-        return LeaveNetworkMessage;
+        return leaveNetworkMessage;
+    }
+
+    public String getFirstJoinMessage() {
+        return firstJoinMessage;
     }
 
     public String getSwapServerMessage() {
-        return SwapServerMessage;
+        return swapServerMessage;
     }
 
     public Iterable<String> getServerNames() {
@@ -219,16 +222,7 @@ public class MessageHandler {
 
     public String formatJoinMessage(ProxiedPlayer player) {
         String messageFormat = getJoinNetworkMessage();
-        messageFormat = messageFormat.replace("%player%", player.getName());
-        messageFormat = messageFormat.replace("%displayname%", player.getDisplayName());
-        if (messageFormat.contains("%server_name%")) {
-            ServerInfo server = player.getServer().getInfo();
-            messageFormat = messageFormat.replace("%server_name%", getServerName(server.getName()));
-        }
-        if (messageFormat.contains("%server_name_clean%")) {
-            ServerInfo server = player.getServer().getInfo();
-            messageFormat = messageFormat.replace("%server_name_clean%", ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', getServerName(server.getName()))));
-        }
+        messageFormat = replacePlaceholders(player, messageFormat);
         if (messageFormat.contains("%playercount_server%")) {
             messageFormat = messageFormat.replace("%playercount_server%", getServerPlayerCount(player, false));
         }
@@ -239,8 +233,33 @@ public class MessageHandler {
         return messageFormat;
     }
 
+
     public String formatQuitMessage(ProxiedPlayer player) {
         String messageFormat = getLeaveNetworkMessage();
+        messageFormat = replacePlaceholders(player, messageFormat);
+        if (messageFormat.contains("%playercount_server%")) {
+            messageFormat = messageFormat.replace("%playercount_server%", getServerPlayerCount(player, true));
+        }
+        if (messageFormat.contains("%playercount_network%")) {
+            messageFormat = messageFormat.replace("%playercount_network%", getNetworkPlayerCount(player, true));
+        }
+
+        return messageFormat;
+    }
+    public String formatFirstJoinMessage(ProxiedPlayer player) {
+        String messageFormat = getFirstJoinMessage();
+        messageFormat = replacePlaceholders(player, messageFormat);
+        if (messageFormat.contains("%playercount_server%")) {
+            messageFormat = messageFormat.replace("%playercount_server%", getServerPlayerCount(player, false));
+        }
+        if (messageFormat.contains("%playercount_network%")) {
+            messageFormat = messageFormat.replace("%playercount_network%", getNetworkPlayerCount(player, false));
+        }
+
+        return messageFormat;
+    }
+
+    private String replacePlaceholders(ProxiedPlayer player, String messageFormat) {
         messageFormat = messageFormat.replace("%player%", player.getName());
         messageFormat = messageFormat.replace("%displayname%", player.getDisplayName());
         if (messageFormat.contains("%server_name%")) {
@@ -251,13 +270,6 @@ public class MessageHandler {
             ServerInfo server = player.getServer().getInfo();
             messageFormat = messageFormat.replace("%server_name_clean%", ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', getServerName(server.getName()))));
         }
-        if (messageFormat.contains("%playercount_server%")) {
-            messageFormat = messageFormat.replace("%playercount_server%", getServerPlayerCount(player, true));
-        }
-        if (messageFormat.contains("%playercount_network%")) {
-            messageFormat = messageFormat.replace("%playercount_network%", getNetworkPlayerCount(player, true));
-        }
-
         return messageFormat;
     }
 
