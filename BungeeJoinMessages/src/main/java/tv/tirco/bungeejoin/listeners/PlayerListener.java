@@ -19,6 +19,7 @@ import tv.tirco.bungeejoin.Main;
 import tv.tirco.bungeejoin.events.FirstJoinNetworkEvent;
 import tv.tirco.bungeejoin.util.HexChat;
 import tv.tirco.bungeejoin.util.MessageHandler;
+import tv.tirco.bungeejoin.util.TitleTracker;
 
 import java.util.concurrent.TimeUnit;
 
@@ -55,6 +56,28 @@ public class PlayerListener implements Listener {
     public void onPlayerSwitchServer(ServerConnectedEvent e) {
         ProxiedPlayer player = e.getPlayer();
         Server server = e.getServer();
+
+        boolean firstSession = false;
+        if (TitleTracker.isJustConnected(e.getPlayer().getUniqueId())) {
+            firstSession = true;
+            TitleTracker.getJustConnected().remove(e.getPlayer().getUniqueId());
+            String channel = "bungeejoin:title";
+            ByteArrayDataOutput out = ByteStreams.newDataOutput();
+            out.writeUTF("Title");
+            out.writeUTF(player.getUniqueId() + "");
+            out.writeBoolean(false); // firstJoin
+            player.getServer().sendData(channel, out.toByteArray());
+        }
+        if (TitleTracker.isJustConnectedNew(e.getPlayer().getUniqueId())) {
+            firstSession = true;
+            TitleTracker.getJustConnectedNew().remove(e.getPlayer().getUniqueId());
+            String channel = "bungeejoin:title";
+            ByteArrayDataOutput out = ByteStreams.newDataOutput();
+            out.writeUTF("Title");
+            out.writeUTF(player.getUniqueId() + "");
+            out.writeBoolean(true);
+            player.getServer().sendData(channel, out.toByteArray());
+        }
 
         if (!ConfigSettings.getInstance().isConnected(player)) {
             return;
@@ -122,12 +145,7 @@ public class PlayerListener implements Listener {
             }
         }
         if (!firstJoin && ConfigSettings.getInstance().isShowTitleOnEveryJoin()) {
-            String channel = "bungeejoin:title";
-            ByteArrayDataOutput out = ByteStreams.newDataOutput();
-            out.writeUTF("Title");
-            out.writeUTF(player.getUniqueId() + "");
-            out.writeBoolean(false); // firstJoin
-            event.getPlayer().getServer().sendData(channel, out.toByteArray());
+            TitleTracker.getJustConnected().add(player.getUniqueId());
         }
         if (!ConfigSettings.getInstance().isJoinNetworkMessageEnabled()) {
             return;

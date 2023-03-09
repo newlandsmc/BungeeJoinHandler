@@ -185,6 +185,9 @@ public class ConfigSettings {
             return p.getServer().getInfo().getName();
         }
     }
+    public String getFromNullable(ProxiedPlayer p) {
+        return previousServer.getOrDefault(p, null);
+    }
 
     public void setFrom(ProxiedPlayer p, String name) {
         previousServer.put(p, name);
