@@ -66,7 +66,7 @@ public class PlayerListener implements Listener {
             out.writeUTF("Title");
             out.writeUTF(player.getUniqueId() + "");
             out.writeBoolean(false); // firstJoin
-            player.getServer().sendData(channel, out.toByteArray());
+            server.sendData(channel, out.toByteArray());
         }
         if (TitleTracker.isJustConnectedNew(e.getPlayer().getUniqueId())) {
             firstSession = true;
@@ -76,7 +76,7 @@ public class PlayerListener implements Listener {
             out.writeUTF("Title");
             out.writeUTF(player.getUniqueId() + "");
             out.writeBoolean(true);
-            player.getServer().sendData(channel, out.toByteArray());
+            server.sendData(channel, out.toByteArray());
         }
 
         if (!ConfigSettings.getInstance().isConnected(player)) {
