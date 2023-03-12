@@ -13,11 +13,13 @@ import net.md_5.bungee.api.event.ServerConnectEvent;
 import net.md_5.bungee.api.event.ServerConnectEvent.Reason;
 import net.md_5.bungee.api.event.ServerConnectedEvent;
 import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.api.scheduler.ScheduledTask;
 import net.md_5.bungee.event.EventHandler;
 import tv.tirco.bungeejoin.ConfigSettings;
 import tv.tirco.bungeejoin.Main;
 import tv.tirco.bungeejoin.events.FirstJoinNetworkEvent;
 import tv.tirco.bungeejoin.util.HexChat;
+import tv.tirco.bungeejoin.util.JoinTracker;
 import tv.tirco.bungeejoin.util.MessageHandler;
 import tv.tirco.bungeejoin.util.TitleTracker;
 
@@ -77,6 +79,14 @@ public class PlayerListener implements Listener {
             out.writeUTF(player.getUniqueId() + "");
             out.writeBoolean(true);
             server.sendData(channel, out.toByteArray());
+        }
+
+        if (JoinTracker.isJustConnected(e.getPlayer().getUniqueId()) && !ConfigSettings.getInstance().isJoinNetworkMessageEnabled()) {
+            String message = MessageHandler.getInstance().formatJoinMessage(player);
+            if (!processSilent(player, message)) {
+                MessageHandler.getInstance().broadcastMessage(HexChat.translateHexCodes(message), "join", player);
+            }
+            JoinTracker.getJustConnected().remove(e.getPlayer().getUniqueId());
         }
 
         if (!ConfigSettings.getInstance().isConnected(player)) {
@@ -147,13 +157,7 @@ public class PlayerListener implements Listener {
         if (!firstJoin && ConfigSettings.getInstance().isShowTitleOnEveryJoin()) {
             TitleTracker.getJustConnected().add(player.getUniqueId());
         }
-        if (!ConfigSettings.getInstance().isJoinNetworkMessageEnabled()) {
-            return;
-        }
-        String message = MessageHandler.getInstance().formatJoinMessage(player);
-        if (!processSilent(player, message)) {
-            MessageHandler.getInstance().broadcastMessage(HexChat.translateHexCodes(message), "join", player);
-        }
+        JoinTracker.getJustConnected().add(player.getUniqueId()); // not the best code but whatever
     }
     public static boolean processSilent(ProxiedPlayer player, String message) {
         //VanishAPI support
