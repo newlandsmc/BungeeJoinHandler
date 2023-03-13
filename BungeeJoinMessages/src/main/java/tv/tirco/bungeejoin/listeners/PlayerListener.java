@@ -13,13 +13,11 @@ import net.md_5.bungee.api.event.ServerConnectEvent;
 import net.md_5.bungee.api.event.ServerConnectEvent.Reason;
 import net.md_5.bungee.api.event.ServerConnectedEvent;
 import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.api.scheduler.ScheduledTask;
 import net.md_5.bungee.event.EventHandler;
 import tv.tirco.bungeejoin.ConfigSettings;
 import tv.tirco.bungeejoin.Main;
 import tv.tirco.bungeejoin.events.FirstJoinNetworkEvent;
 import tv.tirco.bungeejoin.util.HexChat;
-import tv.tirco.bungeejoin.util.JoinTracker;
 import tv.tirco.bungeejoin.util.MessageHandler;
 import tv.tirco.bungeejoin.util.TitleTracker;
 
@@ -81,14 +79,6 @@ public class PlayerListener implements Listener {
             server.sendData(channel, out.toByteArray());
         }
 
-        if (JoinTracker.isJustConnected(e.getPlayer().getUniqueId()) && !ConfigSettings.getInstance().isJoinNetworkMessageEnabled()) {
-            String message = MessageHandler.getInstance().formatJoinMessage(player);
-            if (!processSilent(player, message)) {
-                MessageHandler.getInstance().broadcastMessage(HexChat.translateHexCodes(message), "join", player);
-            }
-            JoinTracker.getJustConnected().remove(e.getPlayer().getUniqueId());
-        }
-
         if (!ConfigSettings.getInstance().isConnected(player)) {
             return;
         }
@@ -136,13 +126,6 @@ public class PlayerListener implements Listener {
         if (player == null) {
             return;
         }
-        /*
-        ProxyServer.getInstance().getScheduler().schedule(Main.getInstance().getPlugin(), () -> {
-            if (player.isConnected()) {
-
-            }
-        }, 3, TimeUnit.SECONDS);
-         */
         ConfigSettings.getInstance().setConnected(player, true);
         boolean firstJoin = false;
         if (Main.getInstance().getStorageHandler() != null) {
@@ -157,8 +140,17 @@ public class PlayerListener implements Listener {
         if (!firstJoin && ConfigSettings.getInstance().isShowTitleOnEveryJoin()) {
             TitleTracker.getJustConnected().add(player.getUniqueId());
         }
-        JoinTracker.getJustConnected().add(player.getUniqueId()); // not the best code but whatever
+        // JoinTracker.getJustConnected().add(player.getUniqueId()); // not the best code but whatever
+        ProxyServer.getInstance().getScheduler().schedule(Main.getInstance().getPlugin(), () -> {
+            if (player.isConnected()) {
+                String message = MessageHandler.getInstance().formatJoinMessage(player);
+                if (!processSilent(player, message)) {
+                    MessageHandler.getInstance().broadcastMessage(HexChat.translateHexCodes(message), "join", player);
+                }
+            }
+        }, 1, TimeUnit.SECONDS);
     }
+
     public static boolean processSilent(ProxiedPlayer player, String message) {
         //VanishAPI support
         if (Main.getInstance().useVanishAPI) {
