@@ -8,6 +8,7 @@ import net.md_5.bungee.config.YamlConfiguration;
 import tv.tirco.bungeejoin.commands.FakeCommand;
 import tv.tirco.bungeejoin.commands.ReloadCommand;
 import tv.tirco.bungeejoin.commands.ToggleJoinCommand;
+import tv.tirco.bungeejoin.listeners.FirstJoinListener;
 import tv.tirco.bungeejoin.listeners.PlayerListener;
 import tv.tirco.bungeejoin.listeners.VanishListener;
 import tv.tirco.bungeejoin.storage.StorageHandler;
@@ -62,6 +63,7 @@ public class Main extends Plugin {
         MessageHandler.getInstance().setupConfigMessages();
         ConfigSettings.getInstance().setUpDefaultValuesFromConfig();
         getProxy().getPluginManager().registerListener(this, new PlayerListener());
+        getProxy().getPluginManager().registerListener(this, new FirstJoinListener());
 
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new FakeCommand());
         ProxyServer.getInstance().getPluginManager().registerCommand(this, new ReloadCommand());
