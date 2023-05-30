@@ -35,7 +35,7 @@ public class MessageHandler {
         joinNetworkMessage = config.getString("Messages.JoinNetworkMessage", "&6%player% &6has connected to the network!");
         leaveNetworkMessage = config.getString("Messages.LeaveNetworkMessage", "&6%player% &6has disconnected from the network!");
         firstJoinMessage = config.getString("Messages.FirstJoinMessage", "&6%player% &6has joined the network for the first time!");
-        HashMap<String, String> serverNames = new HashMap<String, String>();
+        HashMap<String, String> serverNames = new HashMap<>();
 
         for (String server : config.getSection("Servers").getKeys()) {
             //Main.getInstance().getLogger().info("Looping: " + server);
