@@ -131,10 +131,12 @@ public class PlayerListener implements Listener {
         if (Main.getInstance().getStorageHandler() != null) {
             if (!Main.getInstance().getStorageHandler().doesPlayerExist(player.getUniqueId())) {
                 Main.getInstance().getStorageHandler().createPlayer(player.getUniqueId(), player.getName());
+                Main.getInstance().getLogger().info(" [JOIN-DBG] Created player \"" + player.getName() + "\" in the database.");
                 ProxyServer.getInstance().getPluginManager().callEvent(new FirstJoinNetworkEvent(player));
                 firstJoin = true;
             } else {
                 Main.getInstance().getStorageHandler().setLastJoin(player.getUniqueId(), System.currentTimeMillis());
+                Main.getInstance().getLogger().info(" [JOIN-DBG] Updated player \"" + player.getName() + "\" in the database.");
             }
         }
         if (!firstJoin && ConfigSettings.getInstance().isShowTitleOnEveryJoin()) {
